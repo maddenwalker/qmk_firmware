@@ -8,7 +8,7 @@ enum layer_number {
 };
 
 enum custom_keycodes {
-    ALFRED
+    ALFRED = SAFE_RANGE
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -146,13 +146,18 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 #ifdef OLED_DRIVER_ENABLE
     set_keylog(keycode, record);
 #endif
+    // set_timelog();
+  }
 
   switch (keycode) {
     case ALFRED:
-      SEND_STRING(SS_DOWN(X_LGUI) SS_TAP(X_SPC));
+      if (record->event.pressed) {
+        SEND_STRING(SS_DOWN(X_LGUI) SS_TAP(X_SPC));
+      } else {
+        SEND_STRING(SS_UP(X_LGUI));
+      }
       break;
   };
-    // set_timelog();
-  }
+
   return true;
 }
